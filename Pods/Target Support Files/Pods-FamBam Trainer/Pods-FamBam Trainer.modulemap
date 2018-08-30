@@ -1,0 +1,6 @@
+framework module Pods_FamBam_Trainer {
+  umbrella header "Pods-FamBam Trainer-umbrella.h"
+
+  export *
+  module * { export * }
+}
