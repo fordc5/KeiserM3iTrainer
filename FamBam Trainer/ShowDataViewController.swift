@@ -198,12 +198,17 @@ class ShowDataViewController: UIViewController, UITableViewDelegate, UITableView
                 let dateFormatterPrint = DateFormatter()
                 dateFormatterPrint.dateFormat = "MMM dd, yyyy"
                 let parsedDate = dateFormatterPrint.string(from: date)
-                tempArr.append("Workout #\(workoutNum) on \(parsedDate)")
+                let time = ((((data[key] as! NSDictionary)["wattdata"] as! [[String : NSNumber]]).last as! [String: NSNumber])["time"] as! NSNumber)
+                let (h,m,s) = secondsToHoursMinutesSeconds(seconds: Int(time))
+                tempArr.append("Workout #\(workoutNum) on \(parsedDate)  |  \(h)h \(m)m \(s)s")
             }
         }
         workouts = tempArr
     }
     
+    public func secondsToHoursMinutesSeconds (seconds : Int) -> (Int, Int, Int) {
+        return (seconds / 3600, (seconds % 3600) / 60, (seconds % 3600) % 60)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -236,13 +241,11 @@ class ShowDataViewController: UIViewController, UITableViewDelegate, UITableView
         PBBotLineLayer.lineWidth = 1
         self.view.layer.addSublayer(PBBotLineLayer)
         
-        
         userPBHeaderLabel = UILabel(frame: CGRect(x: 5, y: pos.PB_HEADER_Y, width: pos.SCREEN_WIDTH, height: pos.PB_HEADER_HEIGHT))
         userPBHeaderLabel.textAlignment = .left
         userPBHeaderLabel.text = userPBHeaderLabelText
         userPBHeaderLabel.textColor = #colorLiteral(red: 0.06666666667, green: 0.4823529412, blue: 0.662745098, alpha: 1)
         self.view.addSubview(userPBHeaderLabel)
-        
         
         userPBMaxHeaderLabel = UILabel(frame: CGRect(x: 12, y: pos.MAX_Y, width: pos.SCREEN_WIDTH, height: pos.PB_HEIGHTS))
         userPBMaxHeaderLabel.textAlignment = .left
@@ -262,7 +265,6 @@ class ShowDataViewController: UIViewController, UITableViewDelegate, UITableView
         userPBMaxNewRecordLabel.isHidden = true
         self.view.addSubview(userPBMaxNewRecordLabel)
         
-        
         userPBThirtyHeaderLabel = UILabel(frame: CGRect(x: 12, y: pos.THIRTY_Y, width: pos.SCREEN_WIDTH, height: pos.PB_HEIGHTS))
         userPBThirtyHeaderLabel.textAlignment = .left
         userPBThirtyHeaderLabel.text = userPBThirtyHeaderLabelText
@@ -281,7 +283,6 @@ class ShowDataViewController: UIViewController, UITableViewDelegate, UITableView
         userPBThirtyNewRecordLabel.isHidden = true
         self.view.addSubview(userPBThirtyNewRecordLabel)
         
-        
         userPBOneHeaderLabel = UILabel(frame: CGRect(x: 12, y: pos.ONE_Y, width: pos.SCREEN_WIDTH, height: pos.PB_HEIGHTS))
         userPBOneHeaderLabel.textAlignment = .left
         userPBOneHeaderLabel.text = userPBOneHeaderLabelText
@@ -299,7 +300,6 @@ class ShowDataViewController: UIViewController, UITableViewDelegate, UITableView
         userPBOneNewRecordLabel.textColor = #colorLiteral(red: 1, green: 0.2481553819, blue: 0.09906684028, alpha: 0.9145440925)
         userPBOneNewRecordLabel.isHidden = true
         self.view.addSubview(userPBOneNewRecordLabel)
-        
         
         userPBTenHeaderLabel = UILabel(frame: CGRect(x: 12, y: pos.TEN_Y, width: pos.SCREEN_WIDTH, height: pos.PB_HEIGHTS))
         userPBTenHeaderLabel.textAlignment = .left
@@ -326,7 +326,6 @@ class ShowDataViewController: UIViewController, UITableViewDelegate, UITableView
         userWorkoutsHeaderLabel.textColor = #colorLiteral(red: 0.06666666667, green: 0.4823529412, blue: 0.662745098, alpha: 1)
         self.view.addSubview(userWorkoutsHeaderLabel)
         
-        
         userWorkoutsTableView = UITableView(frame: CGRect(x: 0, y: pos.WORKOUTS_Y, width: pos.SCREEN_WIDTH, height: pos.WORKOUTS_HEIGHT))
         userWorkoutsTableView.register(UITableViewCell.self, forCellReuseIdentifier: "MyCell")
         userWorkoutsTableView.dataSource = self
@@ -339,7 +338,7 @@ class ShowDataViewController: UIViewController, UITableViewDelegate, UITableView
     // on user select
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("User selects \(workouts[indexPath.row])")
-        workoutSelected = workouts[indexPath.row]
+        workoutSelected = workouts[indexPath.row].split(separator: "|")[0].trimmingCharacters(in: CharacterSet.init(charactersIn: " "))
         self.performSegue(withIdentifier: "ViewWorkout", sender: self)
     }
     
@@ -353,5 +352,4 @@ class ShowDataViewController: UIViewController, UITableViewDelegate, UITableView
         cell.textLabel!.textColor = #colorLiteral(red: 0.06666666667, green: 0.4823529412, blue: 0.662745098, alpha: 1)
         return cell
     }
-    
 }

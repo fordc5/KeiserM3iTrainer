@@ -37,6 +37,9 @@ class ViewWorkoutViewController: UIViewController {
     let bestOneMinLabel = UILabel()
     let bestThirtySecLabel = UILabel()
     let bestMaxLabel = UILabel()
+    let totalTimeLabel = UILabel()
+    let avgWattsLabel = UILabel()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,47 +55,69 @@ class ViewWorkoutViewController: UIViewController {
         
         // Best max labels
         let bestMaxLabelHeader = UILabel()
-        bestMaxLabelHeader.text = "Max watts"
+        bestMaxLabelHeader.text = "Max Watts"
         bestMaxLabelHeader.font = bestMaxLabelHeader.font.withSize(23)
         bestMaxLabelHeader.textAlignment = .center
         bestMaxLabelHeader.backgroundColor = #colorLiteral(red: 0.06666666667, green: 0.4823529412, blue: 0.662745098, alpha: 0.8)
         bestMaxLabel.text = ""
-        bestMaxLabel.font = bestMaxLabel.font.withSize(35)
+        bestMaxLabel.font = bestMaxLabel.font.withSize(30)
         bestMaxLabel.textAlignment = .center
         bestMaxLabel.backgroundColor = #colorLiteral(red: 0.06666666667, green: 0.4823529412, blue: 0.662745098, alpha: 0.8)
         
         // Best thirty second labels
         let bestThirtySecLabelHeader = UILabel()
-        bestThirtySecLabelHeader.text = "Best 30s avg"
+        bestThirtySecLabelHeader.text = "Best 30s Avg"
         bestThirtySecLabelHeader.font = bestThirtySecLabelHeader.font.withSize(23)
         bestThirtySecLabelHeader.textAlignment = .center
         bestThirtySecLabelHeader.backgroundColor = #colorLiteral(red: 0.06666666667, green: 0.4823529412, blue: 0.662745098, alpha: 0.6)
         bestThirtySecLabel.text = ""
-        bestThirtySecLabel.font = bestThirtySecLabel.font.withSize(35)
+        bestThirtySecLabel.font = bestThirtySecLabel.font.withSize(30)
         bestThirtySecLabel.textAlignment = .center
         bestThirtySecLabel.backgroundColor = #colorLiteral(red: 0.06666666667, green: 0.4823529412, blue: 0.662745098, alpha: 0.6)
         
         // Best one minute label
         let bestOneMinLabelHeader = UILabel()
-        bestOneMinLabelHeader.text = "Best 1m avg"
+        bestOneMinLabelHeader.text = "Best 1m Avg"
         bestOneMinLabelHeader.font = bestOneMinLabelHeader.font.withSize(23)
         bestOneMinLabelHeader.textAlignment = .center
-        bestOneMinLabelHeader.backgroundColor = #colorLiteral(red: 0.06666666667, green: 0.4823529412, blue: 0.662745098, alpha: 0.4)
+        bestOneMinLabelHeader.backgroundColor = #colorLiteral(red: 0.06666666667, green: 0.4823529412, blue: 0.662745098, alpha: 0.6)
         bestOneMinLabel.text = ""
-        bestOneMinLabel.font = bestOneMinLabel.font.withSize(35)
+        bestOneMinLabel.font = bestOneMinLabel.font.withSize(30)
         bestOneMinLabel.textAlignment = .center
-        bestOneMinLabel.backgroundColor = #colorLiteral(red: 0.06666666667, green: 0.4823529412, blue: 0.662745098, alpha: 0.4)
+        bestOneMinLabel.backgroundColor = #colorLiteral(red: 0.06666666667, green: 0.4823529412, blue: 0.662745098, alpha: 0.6)
         
         // Best ten minute label
         let bestTenMinLabelHeader = UILabel()
-        bestTenMinLabelHeader.text = "Best 10m avg"
+        bestTenMinLabelHeader.text = "Best 10m Avg"
         bestTenMinLabelHeader.font = bestTenMinLabelHeader.font.withSize(23)
         bestTenMinLabelHeader.textAlignment = .center
-        bestTenMinLabelHeader.backgroundColor = #colorLiteral(red: 0.06666666667, green: 0.4823529412, blue: 0.662745098, alpha: 0.2)
+        bestTenMinLabelHeader.backgroundColor = #colorLiteral(red: 0.06666666667, green: 0.4823529412, blue: 0.662745098, alpha: 0.8)
         bestTenMinLabel.text = ""
-        bestTenMinLabel.font = bestTenMinLabel.font.withSize(35)
+        bestTenMinLabel.font = bestTenMinLabel.font.withSize(30)
         bestTenMinLabel.textAlignment = .center
-        bestTenMinLabel.backgroundColor = #colorLiteral(red: 0.06666666667, green: 0.4823529412, blue: 0.662745098, alpha: 0.2)
+        bestTenMinLabel.backgroundColor = #colorLiteral(red: 0.06666666667, green: 0.4823529412, blue: 0.662745098, alpha: 0.8)
+        
+        // total time label
+        let totalTimeLabelHeader = UILabel()
+        totalTimeLabelHeader.text = "Total Time"
+        totalTimeLabelHeader.font = bestTenMinLabelHeader.font.withSize(23)
+        totalTimeLabelHeader.textAlignment = .center
+        totalTimeLabelHeader.backgroundColor = #colorLiteral(red: 0.06666666667, green: 0.4823529412, blue: 0.662745098, alpha: 0.8)
+        totalTimeLabel.text = ""
+        totalTimeLabel.font = bestTenMinLabel.font.withSize(30)
+        totalTimeLabel.textAlignment = .center
+        totalTimeLabel.backgroundColor = #colorLiteral(red: 0.06666666667, green: 0.4823529412, blue: 0.662745098, alpha: 0.8)
+        
+        // avg watts label
+        let avgWattsLabelHeader = UILabel()
+        avgWattsLabelHeader.text = "Avg Watts"
+        avgWattsLabelHeader.font = bestTenMinLabelHeader.font.withSize(23)
+        avgWattsLabelHeader.textAlignment = .center
+        avgWattsLabelHeader.backgroundColor = #colorLiteral(red: 0.06666666667, green: 0.4823529412, blue: 0.662745098, alpha: 0.6)
+        avgWattsLabel.text = ""
+        avgWattsLabel.font = bestTenMinLabel.font.withSize(30)
+        avgWattsLabel.textAlignment = .center
+        avgWattsLabel.backgroundColor = #colorLiteral(red: 0.06666666667, green: 0.4823529412, blue: 0.662745098, alpha: 0.6)
         
         
         // nested stack Views
@@ -128,6 +153,22 @@ class ViewWorkoutViewController: UIViewController {
         v4StackView.addArrangedSubview(bestTenMinLabelHeader)
         v4StackView.addArrangedSubview(bestTenMinLabel)
         
+        let v5StackView = UIStackView()
+        v5StackView.axis = UILayoutConstraintAxis.vertical
+        v5StackView.distribution = .fillEqually
+        v5StackView.alignment = UIStackViewAlignment.fill
+        v5StackView.spacing = 0
+        v5StackView.addArrangedSubview(totalTimeLabelHeader)
+        v5StackView.addArrangedSubview(totalTimeLabel)
+        
+        let v6StackView = UIStackView()
+        v6StackView.axis = UILayoutConstraintAxis.vertical
+        v6StackView.distribution = .fillEqually
+        v6StackView.alignment = UIStackViewAlignment.fill
+        v6StackView.spacing = 0
+        v6StackView.addArrangedSubview(avgWattsLabelHeader)
+        v6StackView.addArrangedSubview(avgWattsLabel)
+        
         let h1StackView = UIStackView()
         h1StackView.axis = UILayoutConstraintAxis.horizontal
         h1StackView.distribution = .fillEqually
@@ -144,6 +185,14 @@ class ViewWorkoutViewController: UIViewController {
         h2StackView.addArrangedSubview(v3StackView)
         h2StackView.addArrangedSubview(v4StackView)
         
+        let h3StackView = UIStackView()
+        h3StackView.axis = UILayoutConstraintAxis.horizontal
+        h3StackView.distribution = .fillEqually
+        h3StackView.alignment = UIStackViewAlignment.fill
+        h3StackView.spacing = 0
+        h3StackView.addArrangedSubview(v5StackView)
+        h3StackView.addArrangedSubview(v6StackView)
+        
         let stackView = UIStackView(frame: CGRect(x: 0, y: pos.VERT_STACK_Y, width: pos.SCREEN_WIDTH, height: pos.VERT_STACK_HEIGHT))
         stackView.axis = UILayoutConstraintAxis.vertical
         stackView.distribution = .fillEqually
@@ -151,6 +200,7 @@ class ViewWorkoutViewController: UIViewController {
         stackView.spacing = 0
         stackView.addArrangedSubview(h1StackView)
         stackView.addArrangedSubview(h2StackView)
+        stackView.addArrangedSubview(h3StackView)
         self.view.addSubview(stackView)
         
         
@@ -172,23 +222,25 @@ class ViewWorkoutViewController: UIViewController {
     
     func populateGraph(data : [String : Any]) {
         let workoutKey = "workout\(workoutSelected.split(separator: " ")[1].suffix(1))"
-        let dbData = ((data[workoutKey] as! NSDictionary)["wattdata"] as! [NSDictionary])
-        for entry in dbData {
-            graphData.append(ChartDataEntry(x:Double(entry["time"] as! NSNumber), y:Double(entry["data"] as! NSNumber)))
+        if (data[workoutKey] as! NSDictionary)["wattdata"] != nil {
+            let dbData = ((data[workoutKey] as! NSDictionary)["wattdata"] as! [NSDictionary])
+            for entry in dbData {
+                graphData.append(ChartDataEntry(x:Double(entry["time"] as! NSNumber), y:Double(entry["data"] as! NSNumber)))
+            }
+            let line1 = LineChartDataSet(values: graphData, label: "Watts")
+            line1.drawCirclesEnabled = false
+            line1.drawValuesEnabled = false
+            line1.colors = [UIColor(red: 17/255, green: 123/255, blue: 169/255, alpha: 1)]
+            let data = LineChartData()
+            data.addDataSet(line1)
+            chartView.data = data
+            chartView.chartDescription?.enabled = false
+            chartView.rightAxis.enabled = false
+            chartView.xAxis.drawGridLinesEnabled = false
+            chartView.leftAxis.drawGridLinesEnabled = false
+            chartView.xAxis.labelPosition = .bottom
+            chartView.legend.enabled = false
         }
-        let line1 = LineChartDataSet(values: graphData, label: "Watts")
-        line1.drawCirclesEnabled = false
-        line1.drawValuesEnabled = false
-        line1.colors = [UIColor(red: 17/255, green: 123/255, blue: 169/255, alpha: 1)]
-        let data = LineChartData()
-        data.addDataSet(line1)
-        chartView.data = data
-        chartView.chartDescription?.enabled = false
-        chartView.rightAxis.enabled = false
-        chartView.xAxis.drawGridLinesEnabled = false
-        chartView.leftAxis.drawGridLinesEnabled = false
-        chartView.xAxis.labelPosition = .bottom
-        chartView.legend.enabled = false
     }
     
     func populateBests(data : [String : Any]) {
@@ -197,6 +249,22 @@ class ViewWorkoutViewController: UIViewController {
         bestOneMinLabel.text = "\(((data[workoutKey] as! NSDictionary)["bests"] as! NSDictionary)["one"] as! NSNumber)"
         bestThirtySecLabel.text = "\(((data[workoutKey] as! NSDictionary)["bests"] as! NSDictionary)["thirty"] as! NSNumber)"
         bestMaxLabel.text = "\(((data[workoutKey] as! NSDictionary)["bests"] as! NSDictionary)["max"] as! NSNumber)"
+        
+        let time = ((((data[workoutKey] as! NSDictionary)["wattdata"] as! [[String : NSNumber]]).last as! [String: NSNumber])["time"] as! NSNumber)
+        let (h,m,s) = secondsToHoursMinutesSeconds(seconds: Int(time))
+        totalTimeLabel.text = "\(h)h \(m)m \(s)s"
+        
+        let wd = (data[workoutKey] as! NSDictionary)["wattdata"] as! [[String : NSNumber]]
+        var totalWatts = 0
+        for item in wd {
+            totalWatts += item["data"] as! Int
+        }
+        let avgWatts = Int(totalWatts / wd.count)
+        avgWattsLabel.text = "\(avgWatts)"
+    }
+    
+    public func secondsToHoursMinutesSeconds (seconds : Int) -> (Int, Int, Int) {
+        return (seconds / 3600, (seconds % 3600) / 60, (seconds % 3600) % 60)
     }
     
 }

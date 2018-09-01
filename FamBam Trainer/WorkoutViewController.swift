@@ -40,6 +40,8 @@ class WorkoutViewController: UIViewController, CBCentralManagerDelegate, CBPerip
     
     var workoutNumber = 0
     
+    var homeButton : UIBarButtonItem!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,10 +61,11 @@ class WorkoutViewController: UIViewController, CBCentralManagerDelegate, CBPerip
         navView.addSubview(label)
         // Set the navigation bar's navigation item's titleView to the navView
         self.navigationItem.titleView = navView
-        self.navigationItem.hidesBackButton = true
+        homeButton = UIBarButtonItem(title: "Home", style: .plain, target: self, action: #selector(moveToHome))
+        self.navigationItem.leftBarButtonItem = homeButton
+
         
         // VIEWS:
-        
         chartView.data = data
         chartView.chartDescription?.enabled = false
         chartView.rightAxis.enabled = false
@@ -71,7 +74,6 @@ class WorkoutViewController: UIViewController, CBCentralManagerDelegate, CBPerip
         chartView.xAxis.labelPosition = .bottom
         chartView.legend.enabled = true
         
-        
         wattLabel.text = "---"
         wattLabel.textColor = #colorLiteral(red: 0.831372549, green: 0.6588235294, blue: 0.1450980392, alpha: 1)
         wattLabel.font = UIFont.systemFont(ofSize: 50)
@@ -79,7 +81,6 @@ class WorkoutViewController: UIViewController, CBCentralManagerDelegate, CBPerip
         wattLabel.center = navView.center
         wattLabel.textAlignment = NSTextAlignment.center
         
-    
         startButton.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         startButton.layer.borderWidth = 3.0
         startButton.layer.cornerRadius = 10
@@ -88,7 +89,6 @@ class WorkoutViewController: UIViewController, CBCentralManagerDelegate, CBPerip
         startButton.setTitleColor(#colorLiteral(red: 0.831372549, green: 0.6588235294, blue: 0.1450980392, alpha: 1), for: .normal)
         startButton.titleLabel?.font = UIFont.systemFont(ofSize: 30)
         startButton.addTarget(self, action: #selector(startButtonAction), for: .touchUpInside)
-        
         
         stopButton.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         stopButton.layer.borderWidth = 3.0
@@ -196,6 +196,10 @@ class WorkoutViewController: UIViewController, CBCentralManagerDelegate, CBPerip
     // start button listener
     @objc func startButtonAction(sender: UIButton!) {
         print("Start Workout")
+        
+        // hide back button
+        homeButton.isEnabled = false
+        
         startButton.isHidden = true
         stopButton.isHidden = false
         
@@ -212,8 +216,12 @@ class WorkoutViewController: UIViewController, CBCentralManagerDelegate, CBPerip
         //initialize space in db for workout
         docName = workoutUser.split(separator: " ")[0].lowercased() + workoutUser.split(separator: " ")[1].lowercased()
         
-       
+       // write timestamp to database
         db.collection("users").document(docName).setData(["workout\(workoutNumber)": ["Timestamp": Timestamp(date: Date())]], merge:true)
+        
+        //initialize a value in dataArray:
+        let dataObject = WattTimeObject(watts: 0, offset: 0.0)
+        dataArray.append(dataObject)
     }
     
     // stop button listener
@@ -264,20 +272,14 @@ class WorkoutViewController: UIViewController, CBCentralManagerDelegate, CBPerip
         let ten : Int = Int(round(findOther(val : 600)))
         let thirty : Int = Int(round(findOther(val : 30)))
         
-        print("ride bests:")
-        print(max)
-        print(one)
-        print(ten)
-        print(thirty)
-        
         db.collection("users").document(docName).setData(["workout\(workoutNumber)": ["bests": ["max":max, "one":one, "ten":ten, "thirty":thirty], "wattdata": wattdata]], merge:true) { err in
             if let err = err {
                 print("Error writing document: \(err)")
             } else {
                 print("Document successfully written!")
                 
-                // update/create PBs
-                // make db call and then reset in callback function
+                // make db call to update (if necessary) personal bests (PBs)
+                // then segue view to home
                 DatabaseMethods.getUserData(key: self.docName) {
                     data in
                     self.updatePBs(data: data, workoutMax: max, workoutOne: one, workoutTen: ten, workoutThirty: thirty);
@@ -285,10 +287,6 @@ class WorkoutViewController: UIViewController, CBCentralManagerDelegate, CBPerip
                 }
             }
         }
-
-        
-        
-
     }
     
     func updatePBs(data: [String : Any], workoutMax: Int, workoutOne: Int, workoutTen: Int, workoutThirty: Int) {
@@ -331,7 +329,8 @@ class WorkoutViewController: UIViewController, CBCentralManagerDelegate, CBPerip
         db.collection("users").document(docName).setData(["PBs": ["10Minute": ["watts": oldTenMin, "workout": oldTenWorkout],                                                                                     "1Minute": ["watts": oldOneMin, "workout": oldOneWorkout], "30Second": ["watts": oldThirtySec, "workout": oldThirtyWorkout], "Max": ["watts": oldMax, "workout": oldMaxWorkout]]], merge: true)
     }
     
-    func moveToHome() {
+    @objc func moveToHome() {
+        print("segue to home")
         self.performSegue(withIdentifier: "FinishWorkout", sender: self)
     }
     
@@ -397,7 +396,7 @@ class WorkoutViewController: UIViewController, CBCentralManagerDelegate, CBPerip
                 } else {
                     power = 0
                 }
-                wattLabel.text = "\(power)"
+                wattLabel.text = "\(power) watts"
                 let packetDate = Date()
                 let packetTimeInterval = packetDate.timeIntervalSince1970
                 let packetTime = Double(packetTimeInterval)
@@ -424,7 +423,4 @@ class WorkoutViewController: UIViewController, CBCentralManagerDelegate, CBPerip
         set.colors = [#colorLiteral(red: 0.831372549, green: 0.6588235294, blue: 0.1450980392, alpha: 1)]
         return set;
     }
-    
-
-    
 }

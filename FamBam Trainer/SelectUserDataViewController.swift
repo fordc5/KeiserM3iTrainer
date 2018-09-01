@@ -92,6 +92,4 @@ class SelectUserDataViewController: UIViewController, UITableViewDelegate, UITab
         // Set the navView's frame to fit within the titleView
         navView.sizeToFit()
     }
-    
-    
 }
